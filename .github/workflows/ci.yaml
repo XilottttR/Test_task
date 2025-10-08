@@ -1,0 +1,24 @@
+name: CI Workflow
+
+on:
+  pull_request:
+
+jobs:
+  black-format:
+    runs-on: ubuntu-latest
+    name: Black Code Format
+    steps:
+      - name: Black Check
+        uses: jpetrucciani/black-check@24.10.0
+
+  flake8-lint:
+    runs-on: ubuntu-latest
+    name: Flake8 Lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Python Flake8
+        uses: julianwachholz/flake8-action@v2.0.2
+        with:
+          checkName: "Flake8 Lint"

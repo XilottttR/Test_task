@@ -1,0 +1,36 @@
+services:
+  web:
+    build: .
+    container_name: django_app_test
+    volumes:
+      - ./core_task:/home/to_do/core_task
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env.example
+
+
+  db:
+    image: postgres:15
+    container_name: postgres_db_test
+    environment:
+      POSTGRES_USER: to_do
+      POSTGRES_PASSWORD: to_do
+      POSTGRES_DB: to_do
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: ["postgres", "-c", "log_statement=all"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "to_do", "-d", "to_do"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 5s
+
+volumes:
+  postgres_data:
